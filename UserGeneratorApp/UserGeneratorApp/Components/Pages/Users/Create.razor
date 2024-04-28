@@ -91,6 +91,7 @@
         {
             await UserService.Add(user);
             await Js.InvokeVoidAsync("alert", "Usuario cadastrado com sucesso");
+
             Navigation.NavigateTo("users");
         }
         catch (Exception)
