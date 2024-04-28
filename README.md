@@ -9,7 +9,10 @@ Desenvolvimento de uma aplicação Web Asp.Net Core (Blazor App - SPA), consumin
 # Apresentação Web API - Dev Freela
 
 ## Visualizando as funcionalidades - demonstração das funcionalidades do projetos CRUD
-![Apresentacao Projeto  Blazor](url)
+![Apresentacao Projeto Principal](https://github.com/jehveiga/UserGeneratorApp/blob/main/assets/apresentacao-projeto.gif)
+
+## Visualizando as funcionalidades - demonstração das funcionalidades do projetos CRUD
+![Apresentacao Projeto Gerar Relatório](https://github.com/jehveiga/UserGeneratorApp/blob/main/assets/gerando-relatorio.gif)
 
 ## Script Utilizado SQL - Criado se for optado usando o script
 
