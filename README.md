@@ -14,7 +14,7 @@ Desenvolvimento de uma aplicação Web Asp.Net Core (Blazor App - SPA), consumin
 ## Gerar relatório - demonstração da funcionalidade de gerar relatório
 ![Apresentacao Projeto Gerar Relatório](https://github.com/jehveiga/UserGeneratorApp/blob/main/assets/gerando-relatorio.gif)
 
-## Script Utilizado SQL - Criado se for optado usando o script
+## Script Utilizado SQL - Criado o script se optar criar o banco para por ele
 
 - Alterar a string de conexão no arquivo `appsettings.json`, para as configurações do seu banco.
 - Run `ScriptSql/createDbScript.sql` para criação do banco de dados.
