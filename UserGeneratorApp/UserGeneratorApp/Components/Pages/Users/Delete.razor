@@ -1,0 +1,103 @@
+﻿@page "/users/delete/{id:int}"
+@rendermode InteractiveServer
+@inject NavigationManager Navigation
+@inject ILogger<User> Logger
+@inject IJSRuntime Js
+
+@if (UserView is null)
+{
+    <p class="text-light">Usuario não encontrado</p>
+}
+else
+{
+    <EditForm Model="@UserView" OnSubmit="OnSubimitAsync">
+        <div class="container">
+            <div class="row">
+
+                <div class="row text-center justify-content-center">
+                    <div class="col-12 col-sm-6 text-info">
+                        <h3>@UserView.Name</h3>
+                    </div>
+                </div>
+                <div class="row text-center justify-content-center">
+                    <div class="col-4 col-sm-6 text-dark">
+                        @UserView.Email
+                    </div>
+                </div>
+                <div class="row text-center justify-content-center">
+                    <div class="col-6 col-sm-8 text-dark">
+                        @UserView.Gender
+                    </div>
+                </div>
+                <div class="row text-center justify-content-center">
+                    <div class="col-6 col-sm-8 text-dark">
+                        @UserView.BirthDay
+                    </div>
+                </div>
+                <div class="row text-center justify-content-center">
+                    <div class="col-8 col-sm-10 mt-2 ">
+                        <a href="users" class="btn btn-outline-warning">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5" />
+                            </svg>
+                            Voltar
+                        </a>
+                        <button type="submit" class="btn btn-outline-danger">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5" />
+                            </svg>
+                            Excluir
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </EditForm>
+}
+
+@code {
+    [Inject]
+    public IUserService? UserService { get; set; }
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected UserInputModel? UserView { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var userDb = await UserService.GetById(Id);
+
+            UserView = new UserInputModel
+                {
+                    Id = userDb.Id,
+                    Name = userDb.Name,
+                    Email = userDb.Email,
+                    BirthDay = userDb.BirthDay,
+                    Gender = userDb.Gender
+                };
+        }
+        catch (Exception ex)
+        {
+            Logger.LogInformation($"Falha no servidor! Error: {ex.Message}");
+            throw;
+        }
+    }
+
+    protected async Task OnSubimitAsync()
+    {
+        try
+        {
+            await UserService.Delete(UserView.Id);
+            await Js.InvokeVoidAsync("alert", "Usuario deletado com sucesso");
+            Navigation.NavigateTo("users");
+        }
+        catch (Exception ex)
+        {
+            Logger.LogInformation($"Falha no servidor! Error: {ex.Message}");
+            throw;
+        }
+    }
+}

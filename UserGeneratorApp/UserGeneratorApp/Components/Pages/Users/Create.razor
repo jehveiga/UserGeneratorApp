@@ -1,0 +1,119 @@
+﻿@page "/users/create"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@inject ILogger<User> Logger
+@inject IJSRuntime Js;
+
+<div class="container">
+    <h3 class="text-info col-12 mb-lg-3">Create</h3>
+    <div class="d-flex">
+        <button class="btn btn-success" @onclick="RefreshRandomUserGenerator">Recarregar Usuario</button>
+    </div>
+
+    @if (String.IsNullOrEmpty(UserInput.Name))
+    {
+        <SpinnerLoad></SpinnerLoad>
+    }
+    else
+    {
+        <EditForm Model="@UserInput" OnValidSubmit="@OnValidSubmitAsync" class="row">
+            <DataAnnotationsValidator></DataAnnotationsValidator>
+            <ValidationSummary></ValidationSummary>
+
+            <div class="col-md-8">
+                <label class="col-form-label mt-4 text-black" for="inputNome">Nome do Usuário</label>
+                <InputText @bind-Value="UserInput.Name" class="form-control" placeholder="Digite o nome do usuario" id="inputNome" />
+                <ValidationMessage For="@(() => UserInput.Name)"></ValidationMessage>
+            </div>
+
+            <div class="col-md-8">
+                <label class="col-form-label mt-4 text-black" for="inpuEmail">Email</label>
+                <InputText @bind-Value="UserInput.Email" class="form-control" placeholder="Digite o email" id="inpuEmail" />
+                <ValidationMessage For="@(() => UserInput.Email)"></ValidationMessage>
+            </div>
+
+            <div class="col-md-8">
+                <label class="col-form-label mt-4 text-black" for="inputGenero">Gênero</label>
+                <InputText @bind-Value="UserInput.Gender" class="form-control" placeholder="Digite o genero" id="inputGenero" />
+                <ValidationMessage For="@(() => UserInput.Gender)"></ValidationMessage>
+            </div>
+
+            <div class="col-md-8">
+                <label class="col-form-label mt-4 text-black" for="inpuDataNascimento">Data de Nascimento</label>
+                <InputDate @bind-Value="UserInput.BirthDay" class="form-control" id="inpuDataNascimento" />
+            </div>
+
+            <div class="form-group mt-3">
+                <button type="submit" class="btn btn-primary">Criar</button>
+                <a href="/users" class="btn btn-warning">Cancelar</a>
+            </div>
+
+        </EditForm>
+    }
+
+</div>
+@code {
+    [Inject]
+    public IUserGeneratorService? UserServiceGenerator { get; set; }
+
+    [Inject]
+    public IUserService? UserService { get; set; }
+
+    [Inject]
+    public NavigationManager? Navigation { get; set; }
+
+    public UserViewModel UserView { get; set; } = new();
+    public UserInputModel UserInput { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await RefreshRandomUserGenerator();
+        }
+        catch (Exception)
+        {
+            Logger.LogInformation("Falha interna do servidor");
+            throw;
+        }
+    }
+
+    protected async Task OnValidSubmitAsync()
+    {
+        var user = new User
+            {
+                Name = UserInput.Name,
+                Email = UserInput.Email,
+                Gender = UserInput.Gender,
+                BirthDay = UserInput.BirthDay
+            };
+
+        try
+        {
+            await UserService.Add(user);
+            await Js.InvokeVoidAsync("alert", "Usuario cadastrado com sucesso");
+            Navigation.NavigateTo("users");
+        }
+        catch (Exception)
+        {
+            Logger.LogInformation("Falha interna do servidor");
+            throw;
+        }
+
+    }
+
+    private async Task RefreshRandomUserGenerator()
+    {
+        UserView = await UserServiceGenerator.Get();
+
+        AddUser(UserView);
+    }
+
+    private void AddUser(UserViewModel userViewModel)
+    {
+        UserInput.Name = userViewModel.Name;
+        UserInput.Email = userViewModel.Email;
+        UserInput.Gender = userViewModel.Gender;
+        UserInput.BirthDay = userViewModel.BirthDay;
+    }
+
+}
