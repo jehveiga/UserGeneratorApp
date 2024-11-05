@@ -6,7 +6,7 @@
 
 Desenvolvimento de uma aplicação Web Asp.Net Core (Blazor App - SPA), consumindo uma API Random User Generator que gera usuários aleatórios para cadastro de usuário no sistema, criado um CRUD usando banco de dados PostgreSQL na criação usa os dados gerados pela API persistindo os dados no banco, com páginas relacionadas de listagem, criação, alteração, remoção de dados do usuário. Criado um botão para alterar os dados gerados da API efetuando outra requisição e atualização de dados sem carregamento total da pagina pensando na melhor interação com usuário. Adicionado também a funcionalidade de gerar relatório de listagem de usuários na página index de listagem usando JavaScript.
 
-# Apresentação Web API - Dev Freela
+# Apresentação da Web API - User Generator
 
 ## Visualizando as funcionalidades - demonstração das funcionalidades do projeto CRUD
 ![Apresentacao Projeto Principal](https://github.com/jehveiga/UserGeneratorApp/blob/main/assets/apresentacao-projeto.gif)
